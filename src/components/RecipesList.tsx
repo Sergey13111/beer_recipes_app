@@ -2,6 +2,7 @@ import useRecipeStore from '../store';
 import { Box, List, SxProps } from '@mui/material';
 import { useEffect } from 'react';
 import RecipeItem from './RecipeItem';
+import SkeletonItem from './SkeletonItem';
 
 export interface IItem {
 	id: number;
@@ -13,7 +14,8 @@ export interface IItem {
 
 const RecipesBeer: React.FC = () => {
 	const recipeStore = useRecipeStore();
-	const recipes = recipeStore.recipes;
+	const isLoading = recipeStore.isLoading;
+	const recipes = recipeStore.recipes || [];
 	const fetchRecipes = useRecipeStore((state) => state.fetchRecipes);
 
 	useEffect(() => {
@@ -25,15 +27,19 @@ const RecipesBeer: React.FC = () => {
 			{/* в List без sx не працюе :-) */}
 			<List sx={{ mb: 3 }}>
 				<Box>{/* <Button onClick={handleDelete(id)}>Dell</Button> */}</Box>
-				{recipes.map(({ id, name, description, image_url }) => (
-					<RecipeItem
-						name={name}
-						image_url={image_url}
-						description={description}
-						key={id}
-						id={id}
-					/>
-				))}
+				{recipes.map(({ id, name, description, image_url }) =>
+					isLoading ? (
+						<SkeletonItem />
+					) : (
+						<RecipeItem
+							name={name}
+							image_url={image_url}
+							description={description}
+							key={id}
+							id={id}
+						/>
+					)
+				)}
 			</List>
 		</>
 	);

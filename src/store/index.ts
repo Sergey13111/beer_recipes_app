@@ -12,7 +12,7 @@ const useRecipeStore = create<IRecipesState>()(
 			limit: 5, // количество рецептов на странице
 			indexBeer: 0,
 			visibleRecipes: [], // массив с отображаемыми рецептами
-			isLoading: false,
+			isLoading: true,
 			errors: [],
 			deleteItem: (id) =>
 				set((state) => ({
@@ -21,7 +21,6 @@ const useRecipeStore = create<IRecipesState>()(
 
 			fetchRecipes: async () => {
 				try {
-					// set({ isLoading: true });
 					const recipes = await axios.get('https://api.punkapi.com/v2/beers', {
 						params: {
 							page: 1,
@@ -29,6 +28,7 @@ const useRecipeStore = create<IRecipesState>()(
 					});
 					const renderRecipes = recipes.data.slice(0, 5);
 					set({ recipes: renderRecipes });
+					set({ isLoading: false });
 				} catch (error: any) {
 					set({ isLoading: false, errors: [error.message] });
 					console.error('Error fetching recipes:', error);
