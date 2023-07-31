@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { IRecipesState } from '../models/IRecipesState';
-import axios from 'axios';
+import { RecipesStateType } from '../models/RecipesStateType';
+import axios from '../helpers/axios';
+import { RecipeItemType } from '../models/RecipeItemType';
 
-const useRecipeStore = create<IRecipesState>()(
+const useRecipeStore = create<RecipesStateType>()(
 	devtools(
 		// persist(
-		(set, get) => ({
+		(set, getState) => ({
 			recipes: [],
 			currentPage: 1, // текущая страница
 			limit: 5, // количество рецептов на странице
@@ -21,12 +22,13 @@ const useRecipeStore = create<IRecipesState>()(
 
 			fetchRecipes: async () => {
 				try {
-					const recipes = await axios.get('https://api.punkapi.com/v2/beers', {
+					const { currentPage } = getState();
+					const data: RecipeItemType[] = await axios.get('/', {
 						params: {
-							page: 1,
+							page: currentPage,
 						},
 					});
-					const renderRecipes = recipes.data.slice(0, 5);
+					const renderRecipes = data.slice(0, 5);
 					set({ recipes: renderRecipes });
 					set({ isLoading: false });
 				} catch (error: any) {

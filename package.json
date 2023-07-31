@@ -21,7 +21,7 @@
     "react-intersection-observer": "^9.5.2",
     "react-router-dom": "^6.14.1",
     "react-scripts": "5.0.1",
-    "styled-components": "^5.3.11",
+    "tss-react": "^4.8.8",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
     "zustand": "^4.3.9"
@@ -49,8 +49,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/styled-components": "^5.1.26"
   }
 }

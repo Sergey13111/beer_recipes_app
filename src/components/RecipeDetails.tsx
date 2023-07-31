@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import useRecipeStore from '../store';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const RecipeDetailsComponent: React.FC = () => {
 	const { id } = useParams();
@@ -9,6 +10,10 @@ const RecipeDetailsComponent: React.FC = () => {
 	const recipe = recipes.find((recipe) => recipe.id === Number(id));
 	const hopsNames = recipe?.ingredients.hops.map((hop) => hop.name).join(', ');
 	const maltNames = recipe?.ingredients.malt.map((malt) => malt.name).join(', ');
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [id]);
 
 	return (
 		<>

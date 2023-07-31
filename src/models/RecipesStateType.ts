@@ -1,8 +1,8 @@
-import { RecipeBeerType } from './RecipeBeerType';
+import { RecipeItemType } from './RecipeItemType';
 
-export interface IRecipesState {
-	recipes: RecipeBeerType[];
-	visibleRecipes: RecipeBeerType[];
+export type RecipesStateType = {
+	recipes: RecipeItemType[];
+	visibleRecipes: RecipeItemType[];
 	currentPage: number;
 	indexBeer: number;
 	limit: number;
@@ -10,4 +10,4 @@ export interface IRecipesState {
 	errors?: string[];
 	fetchRecipes: () => void;
 	deleteItem: (id: number) => void;
-}
+};

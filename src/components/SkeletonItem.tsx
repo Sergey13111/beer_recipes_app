@@ -1,22 +1,11 @@
 import { Box, Skeleton } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 const SkeletonItem = () => {
+	const { classes } = useStyles();
 	return (
 		<>
-			<Box
-				sx={{
-					mb: 3,
-					p: 2,
-					display: 'flex',
-					boxShadow: '0px 0px 8px 1px rgba(0,0,0,0.2)',
-					borderRadius: 2,
-					background: '#bad4af70',
-					alignItems: 'center',
-					flexDirection: {
-						xs: 'column',
-						sm: 'row',
-					},
-				}}>
+			<Box className={classes.skeletonWrapper}>
 				<Box>
 					<Skeleton
 						variant='rounded'
@@ -40,5 +29,22 @@ const SkeletonItem = () => {
 		</>
 	);
 };
+
+const useStyles = makeStyles()((theme) => {
+	return {
+		skeletonWrapper: {
+			display: 'flex',
+			boxShadow: '0px 0px 8px 1px rgba(0,0,0,0.2)',
+			borderRadius: '8px',
+			background: theme.palette.background.paper,
+			alignItems: 'center',
+			padding: '16px',
+			marginBottom: '24px',
+			[theme.breakpoints.down('sm')]: {
+				flexDirection: 'column',
+			},
+		},
+	};
+});
 
 export default SkeletonItem;

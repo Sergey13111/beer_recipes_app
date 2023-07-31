@@ -1,10 +1,19 @@
-import { Box, IconButton, Link, ListItem, Typography, styled } from '@mui/material';
+import { Box, IconButton, Link, ListItemButton, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { IItem } from './RecipesList';
+import { ItemType } from './RecipesList';
 import { useNavigate } from 'react-router-dom';
 import useRecipeStore from '../store';
+import { makeStyles } from 'tss-react/mui';
 
-const RecipeItem: React.FC<IItem> = ({ image_url, description, name, id }) => {
+const RecipeItem: React.FC<ItemType> = ({
+	image_url,
+	description,
+	name,
+	id,
+	handleSelectedItems,
+	selectedItems,
+}) => {
+	const { classes } = useStyles();
 	const navigate = useNavigate();
 	const recipeStore = useRecipeStore();
 	const deleteItem = recipeStore.deleteItem;
@@ -13,6 +22,8 @@ const RecipeItem: React.FC<IItem> = ({ image_url, description, name, id }) => {
 		navigate(`/RecipeDetails/${id}`);
 	};
 
+	const isSelected = selectedItems.includes(id);
+
 	const handleDeleteItem = (id: number) => (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.stopPropagation();
 		deleteItem(id);
@@ -20,29 +31,14 @@ const RecipeItem: React.FC<IItem> = ({ image_url, description, name, id }) => {
 
 	return (
 		<>
-			<StyledLinkDetails onClick={handleDetails(id)}>
+			<Link
+				className={classes.linkItem}
+				onClick={handleDetails(id)}
+				onContextMenu={(event) => handleSelectedItems(event, id)}>
 				{/* <StyledLinkDetails to={`/RecipeDetails/${id}`}> */}
-				<ListItem
-					sx={{
-						mb: 3,
-						p: 2,
-						display: 'flex',
-						boxShadow: '0px 0px 8px 1px rgba(0,0,0,0.2)',
-						borderRadius: 2,
-						background: '#bad4af70',
-						flexDirection: {
-							xs: 'column',
-							sm: 'row',
-						},
-						'&:hover': {
-							backgroundColor: '#679d763b',
-							transform: 'scale(1.01)',
-							boxShadow: '0px 0px 16px 5px rgba(0, 0, 0, 0.2)',
-							'& .hoverButton': {
-								display: 'block',
-							},
-						},
-					}}>
+				<ListItemButton
+					selected={isSelected}
+					className={classes.listItem}>
 					<Box
 						width='100px'
 						height='150px'
@@ -72,8 +68,8 @@ const RecipeItem: React.FC<IItem> = ({ image_url, description, name, id }) => {
 						sx={{
 							display: 'none',
 							position: 'absolute',
-							top: '-6px',
-							right: '-6px',
+							top: 0,
+							right: 0,
 							color: '#3a0109ad',
 						}}
 						className='hoverButton'>
@@ -84,15 +80,40 @@ const RecipeItem: React.FC<IItem> = ({ image_url, description, name, id }) => {
 							<ClearIcon />
 						</IconButton>
 					</Box>
-				</ListItem>
-			</StyledLinkDetails>
+				</ListItemButton>
+			</Link>
 		</>
 	);
 };
 
-export const StyledLinkDetails = styled(Link)`
-	color: ${({ theme }) => theme.palette.secondary.main};
-	text-decoration: none;
-	cursor: pointer;
-`;
+const useStyles = makeStyles()((theme) => {
+	return {
+		linkItem: {
+			color: theme.palette.secondary.main,
+			textDecoration: 'none',
+			cursor: 'pointer',
+		},
+
+		listItem: {
+			marginBottom: '24px',
+			padding: '16px',
+			display: 'flex',
+			boxShadow: '0px 0px 8px 1px rgba(0,0,0,0.2)',
+			borderRadius: 2,
+			background: '#bad4af70',
+			[theme.breakpoints.down('sm')]: {
+				flexDirection: 'column',
+			},
+			'&:hover': {
+				backgroundColor: '#679d763b',
+				transform: 'scale(1.01)',
+				boxShadow: '0px 0px 16px 5px rgba(0, 0, 0, 0.2)',
+				'& .hoverButton': {
+					display: 'block',
+				},
+			},
+		},
+	};
+});
+
 export default RecipeItem;
