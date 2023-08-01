@@ -15,10 +15,17 @@ const useRecipeStore = create<RecipesStateType>()(
 			visibleRecipes: [], // массив с отображаемыми рецептами
 			isLoading: true,
 			errors: [],
+
 			deleteItem: (id) =>
 				set((state) => ({
 					recipes: state.recipes.filter((recipe) => recipe.id !== id),
 				})),
+
+			deleteSelectedRecipes: (selectedItems) => {
+				const { recipes } = getState();
+				const updatedRecipes = recipes.filter((recipe) => !selectedItems.includes(recipe.id));
+				set({ recipes: updatedRecipes });
+			},
 
 			fetchRecipes: async () => {
 				try {

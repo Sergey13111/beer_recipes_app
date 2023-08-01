@@ -10,4 +10,5 @@ export type RecipesStateType = {
 	errors?: string[];
 	fetchRecipes: () => void;
 	deleteItem: (id: number) => void;
+	deleteSelectedRecipes: (selectedItems: number[]) => void;
 };
