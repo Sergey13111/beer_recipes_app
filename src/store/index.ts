@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware';
 import { RecipesStateType } from '../models/RecipesStateType';
 import axios from '../helpers/axios';
 import { RecipeItemType } from '../models/RecipeItemType';
+import { AxiosError } from 'axios';
 
 const useRecipeStore = create<RecipesStateType>()(
 	devtools(
@@ -10,7 +11,7 @@ const useRecipeStore = create<RecipesStateType>()(
 		(set, getState) => ({
 			recipes: [],
 			currentPage: 1,
-			// limit: 5,
+			limit: 5,
 			visibleRecipes: [],
 			isLoading: true,
 			errors: [],
@@ -27,13 +28,9 @@ const useRecipeStore = create<RecipesStateType>()(
 			},
 
 			setRenderRecipes: (startIndex, endIndex) => {
-				set({ isLoading: true });
 				const { recipes } = getState();
-
 				const newRecipes = recipes.slice(startIndex, endIndex);
-
 				set({ visibleRecipes: [...newRecipes] });
-				set({ isLoading: false });
 			},
 
 			addPage: () => {
@@ -47,19 +44,20 @@ const useRecipeStore = create<RecipesStateType>()(
 						isLoading: true,
 					});
 					const { currentPage } = getState();
-					const data: RecipeItemType[] = await axios.get('/', {
+					const data: RecipeItemType[] = await axios.get('/i', {
 						params: {
 							page: currentPage,
 						},
 					});
 					// const renderRecipes = data.slice(0, 15);
 					// const allRecipes = [...renderRecipes];
-					set((state) => ({
-						recipes: [...state.recipes, ...data],
-					}));
-				} catch (error: any) {
+
+					set((state) => ({ recipes: [...state.recipes, ...data], isLoading: false }));
+				} catch (err) {
+					const error = err as AxiosError;
+					const { errors } = getState();
 					set({ isLoading: false, errors: [error.message] });
-					console.error('Error fetching recipes:', error);
+					console.error(errors);
 				}
 			},
 		})

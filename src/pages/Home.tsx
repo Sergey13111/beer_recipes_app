@@ -1,4 +1,4 @@
-import RecipesBeer from '../components/RecipesList';
+import RecipesList from '../components/RecipesList';
 import { Container, Typography } from '@mui/material';
 
 const Home: React.FC = () => {
@@ -10,7 +10,7 @@ const Home: React.FC = () => {
 					variant='h2'>
 					List of recipes
 				</Typography>
-				<RecipesBeer />
+				<RecipesList />
 			</Container>
 		</>
 	);

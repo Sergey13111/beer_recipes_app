@@ -10,7 +10,7 @@ export type ItemType = {
 	image_url: string;
 	description: string;
 	name: string;
-	handleSelectedItems: (event: React.MouseEvent<unknown>, id: number) => void;
+	handleSelectedItems: (event: React.MouseEvent<HTMLAnchorElement>, id: number) => void;
 	selectedItems: number[];
 };
 
@@ -23,18 +23,14 @@ const RecipesList: React.FC = () => {
 	const visibleRecipes = recipeStore.visibleRecipes;
 	const deleteSelectedRecipes = recipeStore.deleteSelectedRecipes;
 	const addPage = recipeStore.addPage;
+	const limit = recipeStore.limit;
 
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	const [startIndex, setStartIndex] = useState<number>(0);
 	const [endIndex, setEndIndex] = useState<number>(5);
+	const skeletonArray = new Array(limit).fill(null);
 
 	const currentPage = recipeStore.currentPage;
-
-	// useEffect(() => {
-	// 	if (recipes.length < 15) {
-	// 		fetchRecipes();
-	// 	}
-	// }, [fetchRecipes, recipes.length]);
 
 	useEffect(() => {
 		if (recipes.length < 15) {
@@ -70,7 +66,7 @@ const RecipesList: React.FC = () => {
 		};
 	}, [addPage, endIndex, fetchRecipes, recipes.length, setRenderRecipes, startIndex]);
 
-	const handleSelectedItems = (event: React.MouseEvent<unknown>, id: number) => {
+	const handleSelectedItems = (event: React.MouseEvent<HTMLAnchorElement>, id: number) => {
 		event.preventDefault();
 		const isItemSelected = selectedItems.includes(id);
 		// If the element is already selected, remove it from the list of selected items, otherwise add
@@ -91,6 +87,7 @@ const RecipesList: React.FC = () => {
 	console.log('startIndex', startIndex);
 	console.log('currentPage', currentPage);
 	console.log(isLoading);
+	console.log('recipes.length', recipes.length);
 
 	return (
 		<>
@@ -110,21 +107,19 @@ const RecipesList: React.FC = () => {
 						</Button>
 					</Badge>
 				</Box>
-				{visibleRecipes.map(({ id, name, description, image_url }) =>
-					isLoading ? (
-						<SkeletonItem key={id} />
-					) : (
-						<RecipeItem
-							name={name}
-							image_url={image_url}
-							description={description}
-							key={id}
-							id={id}
-							handleSelectedItems={handleSelectedItems}
-							selectedItems={selectedItems}
-						/>
-					)
-				)}
+				{isLoading
+					? skeletonArray.map((_, index) => <SkeletonItem key={index} />)
+					: visibleRecipes.map(({ id, name, description, image_url }) => (
+							<RecipeItem
+								name={name}
+								image_url={image_url}
+								description={description}
+								key={id}
+								id={id}
+								handleSelectedItems={handleSelectedItems}
+								selectedItems={selectedItems}
+							/>
+					  ))}
 			</List>
 		</>
 	);

@@ -4,7 +4,7 @@ export type RecipesStateType = {
 	recipes: RecipeItemType[];
 	visibleRecipes: RecipeItemType[];
 	currentPage: number;
-	// limit: number;
+	limit: number;
 	isLoading: boolean;
 	errors?: string[];
 	fetchRecipes: () => void;
